@@ -1,11 +1,8 @@
 package com.thoughtworks.movierental;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Customer {
 	private String name;
-	private List<Rental> rentals = new ArrayList<>();
+	private Rentals rentals = new Rentals();
 
 	public Customer(String name) {
 		this.name = name;
@@ -20,14 +17,7 @@ public class Customer {
 	}
 
 	public String statement() {
-		String result = "Rental Record for " + getName() + "\n";
-		for (Rental each : rentals) {
-			result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(each.getAmount()) + "\n";
-		}
-		// add footer lines result
-		result += "Amount owed is " + String.valueOf(getTotalAmount()) + "\n";
-		result += "You earned " + String.valueOf(getFrequentRenterPoints()) + " frequent renter points";
-		return result;
+		return new TextStatement().statement(rentals, getName());
 	}
 
 	public String htmlStatement() {
@@ -35,27 +25,10 @@ public class Customer {
 		for (Rental each : rentals) {
 			result += each.getMovie().getTitle() + " " + String.valueOf(each.getAmount()) + "<BR/>";
 		}
-		result += "Amount owed is <B>" + String.valueOf(getTotalAmount()) + "</B><BR/>";
-		result += "You earned <B>" + String.valueOf(getFrequentRenterPoints()) + "</B> frequent renter points";
+		result += "Amount owed is <B>" + String.valueOf(rentals.getTotalAmount()) + "</B><BR/>";
+		result += "You earned <B>" + String.valueOf(rentals.getFrequentRenterPoints()) + "</B> frequent renter points";
 		return result;
 
-	}
-
-	private double getTotalAmount() {
-		double totalAmount = 0;
-		for (Rental each : rentals) {
-			totalAmount += each.getAmount();
-			;
-		}
-		return totalAmount;
-	}
-
-	private int getFrequentRenterPoints() {
-		int frequentRenterPoints = 0;
-		for (Rental each : rentals) {
-			frequentRenterPoints += each.calculateFrequentPoints(each);
-		}
-		return frequentRenterPoints;
 	}
 
 }
